@@ -2,12 +2,13 @@ import '../css/App.css';
 import { Component } from "react";
 import Container from "./Container";
 import { getAllStudents } from "./client";
-import {Table} from 'antd'
+import {Table, Avatar, Spin} from 'antd'
 
 class App extends Component {
 
     state = {
-        students: []
+        students: [],
+        isFetching : false
     }
 
     componentDidMount() {
@@ -15,19 +16,32 @@ class App extends Component {
     }
 
     fetchStudents = () => {
+        this.setState({
+            isFetching : true
+        })
         getAllStudents()
             .then(res => res.json()
                 .then(result => {
                     this.setState({
-                        students : result
+                        students : result,
+                        isFetching : false
                     })
                 }))
     }
 
     render() {
-        const {students} = this.state
+        const {students, isFetching} = this.state
 
         const columns = [
+            {
+                title: '',
+                key: 'avatar',
+                render: (text,student) =>(
+                    <Avatar size='large'>
+                        {`${student.firstName.charAt(0).toUpperCase()}${student.lastName.charAt(0).toUpperCase()}`}
+                    </Avatar>
+                ),
+            },
             {
                 title: 'ID',
                 dataIndex: 'studentId',
@@ -54,6 +68,10 @@ class App extends Component {
                 key: 'email',
             },
         ];
+
+        if(isFetching){
+            return <Spin size="large" style={ {position: 'fixed',top: '50%',left: '50%',}}/>
+        }
 
         if (students && students.length) {
            return <Container><Table dataSource={students} columns={columns} rowKey='studentId' pagination={false}/></Container>
