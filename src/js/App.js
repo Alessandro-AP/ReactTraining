@@ -1,6 +1,7 @@
 import '../css/App.css';
 import { Component } from "react";
 import Container from "./Container";
+import Footer from './Footer';
 import { getAllStudents } from "./client";
 import {Table, Avatar, Spin} from 'antd'
 
@@ -74,7 +75,10 @@ class App extends Component {
         }
 
         if (students && students.length) {
-           return <Container><Table dataSource={students} columns={columns} rowKey='studentId' pagination={false}/></Container>
+           return <Container>
+                    <Table dataSource={students} columns={columns} rowKey='studentId' pagination={false}/>
+                    <Footer numberOfStudents={students.length} />
+                  </Container>
         } else
             return <h1>No Students Found</h1>
     }
