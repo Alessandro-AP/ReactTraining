@@ -1,0 +1,10 @@
+.input_addStudent{
+    margin: 5px;
+}
+
+.error_tag{
+    margin-bottom: 10px;
+    margin-left: 5px;
+    background: #FF5500;
+    color: white;
+}

@@ -3,18 +3,24 @@ import { Component } from "react";
 import Container from "./Container";
 import Footer from './Footer';
 import { getAllStudents } from "./client";
-import {Table, Avatar, Spin} from 'antd'
+import {Table, Avatar, Spin, Modal} from 'antd'
+import AddStudentForm from './forms/AddStudentForm'
 
 class App extends Component {
 
     state = {
         students: [],
-        isFetching : false
+        isFetching : false,
+        isAddStudentModalVisible: false
     }
 
     componentDidMount() {
         this.fetchStudents()
     }
+
+    openAddStudentModal = () => {this.setState({isAddStudentModalVisible: true})}
+
+    closeAddStudentModal = () => this.setState({isAddStudentModalVisible: false})
 
     fetchStudents = () => {
         this.setState({
@@ -31,7 +37,7 @@ class App extends Component {
     }
 
     render() {
-        const {students, isFetching} = this.state
+        const {students, isFetching, isAddStudentModalVisible} = this.state
 
         const columns = [
             {
@@ -77,7 +83,8 @@ class App extends Component {
         if (students && students.length) {
            return <Container>
                     <Table dataSource={students} columns={columns} rowKey='studentId' pagination={false}/>
-                    <Footer numberOfStudents={students.length} />
+                    <Modal title="Add new students"  visible={isAddStudentModalVisible} onOk={this.closeAddStudentModal} onCancel={this.closeAddStudentModal} width={1000}><AddStudentForm/></Modal>
+                    <Footer openModal={this.openAddStudentModal} numberOfStudents={students.length} />
                   </Container>
         } else
             return <h1>No Students Found</h1>
